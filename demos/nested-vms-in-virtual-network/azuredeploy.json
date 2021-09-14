@@ -187,6 +187,21 @@
   },
   "resources": [
     {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2021-02-01",
+      "name": "[parameters('HostPublicIPAddressName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Basic"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[toLower(format('{0}-{1}', parameters('HostVirtualMachineName'), uniqueString(resourceGroup().id)))]"
+        }
+      }
+    },
+    {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2021-02-01",
       "name": "[variables('NATSubnetNSGName')]",
