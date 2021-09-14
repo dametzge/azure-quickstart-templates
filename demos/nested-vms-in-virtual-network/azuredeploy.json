@@ -186,7 +186,6 @@
     "HVHostSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
-
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2021-02-01",
