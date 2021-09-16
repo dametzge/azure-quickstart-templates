@@ -32,19 +32,19 @@
     },
     "HostPublicIPAddressName": {
       "type": "string",
-      "defaultValue": "HYPERVPIP",
+      "defaultValue": "NEWHOSTVPIP",
       "metadata": {
-        "description": "Resource Name for Public IP address attached to Hyper-V Host"
+        "description": "Resource Name for Public IP address attached to NEWHOST-V Host"
       }
     },
-    "virtualNetworkName": {
+    "Vnet2Name": {
       "type": "string",
-      "defaultValue": "VirtualNetwork",
+      "defaultValue": "Vnet2",
       "metadata": {
-        "description": "Hyper-V Host and Guest VMs Virtual Network"
+        "description": "NEWHOST-V Host and Guest VMs Virtual Network"
       }
     },
-    "virtualNetworkAddressPrefix": {
+    "Vnet2AddressPrefix": {
       "type": "string",
       "defaultValue": "10.0.0.0/22",
       "metadata": {
@@ -65,18 +65,18 @@
         "description": "NAT Subnet Address Space"
       }
     },
-    "hyperVSubnetName": {
+    "NEWHOSTVSubnetName": {
       "type": "string",
-      "defaultValue": "Hyper-V-LAN",
+      "defaultValue": "NEWHOST-V-LAN",
       "metadata": {
-        "description": "Hyper-V Host Subnet Name"
+        "description": "NEWHOST-V Host Subnet Name"
       }
     },
-    "hyperVSubnetPrefix": {
+    "NEWHOSTVSubnetPrefix": {
       "type": "string",
       "defaultValue": "10.0.1.0/24",
       "metadata": {
-        "description": "Hyper-V Host Subnet Address Space"
+        "description": "NEWHOST-V Host Subnet Address Space"
       }
     },
     "ghostedSubnetName": {
@@ -109,24 +109,24 @@
     },
     "HostNetworkInterface1Name": {
       "type": "string",
-      "defaultValue": "HYPERVNIC1",
+      "defaultValue": "NEWHOSTVNIC1",
       "metadata": {
-        "description": "Hyper-V Host Network Interface 1 Name, attached to NAT Subnet"
+        "description": "NEWHOST-V Host Network Interface 1 Name, attached to NAT Subnet"
       }
     },
     "HostNetworkInterface2Name": {
       "type": "string",
-      "defaultValue": "HYPERVNIC2",
+      "defaultValue": "NEWHOSTVNIC2",
       "metadata": {
-        "description": "Hyper-V Host Network Interface 2 Name, attached to Hyper-V LAN Subnet"
+        "description": "NEWHOST-V Host Network Interface 2 Name, attached to NEWHOST-V LAN Subnet"
       }
     },
     "HostVirtualMachineName": {
       "type": "string",
-      "defaultValue": "HYPERV",
+      "defaultValue": "NEWHOSTV",
       "maxLength": 15,
       "metadata": {
-        "description": "Name of Hyper-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
+        "description": "Name of NEWHOST-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
       }
     },
     "HostVirtualMachineSize": {
@@ -178,12 +178,12 @@
   "functions": [],
   "variables": {
     "NATSubnetNSGName": "[format('{0}NSG', parameters('NATSubnetName'))]",
-    "hyperVSubnetNSGName": "[format('{0}NSG', parameters('hyperVSubnetName'))]",
+    "NEWHOSTVSubnetNSGName": "[format('{0}NSG', parameters('NEWHOSTVSubnetName'))]",
     "ghostedSubnetNSGName": "[format('{0}NSG', parameters('ghostedSubnetName'))]",
     "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
     "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
     "DSCInstallWindowsFeaturesUri": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
-    "HYPERVSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('HYPERVsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+    "NEWHOSTVSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('NEWHOSTVsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
    
@@ -245,7 +245,7 @@
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2021-02-01",
-      "name": "[variables('hyperVSubnetNSGName')]",
+      "name": "[variables('NEWHOSTVSubnetNSGName')]",
       "location": "[parameters('location')]",
       "properties": {}
     },
@@ -264,14 +264,14 @@
       "properties": {}
     },
     {
-      "type": "Microsoft.Network/virtualNetworks",
+      "type": "Microsoft.Network/Vnet2s",
       "apiVersion": "2021-02-01",
-      "name": "[parameters('virtualNetworkName')]",
+      "name": "[parameters('Vnet2Name')]",
       "location": "[parameters('location')]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('virtualNetworkAddressPrefix')]"
+            "[parameters('Vnet2AddressPrefix')]"
           ]
         },
         "subnets": [
@@ -285,11 +285,11 @@
             }
           },
           {
-            "name": "[parameters('hyperVSubnetName')]",
+            "name": "[parameters('NEWHOSTVSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('hyperVSubnetPrefix')]",
+              "addressPrefix": "[parameters('NEWHOSTVSubnetPrefix')]",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('hyperVSubnetNSGName'))]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('NEWHOSTVSubnetNSGName'))]"
               }
             }
           },
@@ -320,7 +320,7 @@
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azureVMsSubnetNSGName'))]",
         "[resourceId('Microsoft.Resources/deployments', 'udrDeploy')]",
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('ghostedSubnetNSGName'))]",
-        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('hyperVSubnetNSGName'))]",
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('NEWHOSTVSubnetNSGName'))]",
         "[resourceId('Microsoft.Network/networkSecurityGroups', variables('NATSubnetNSGName'))]"
       ]
     },
@@ -414,7 +414,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-03-01",
-      "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'HYPERVSetup')]",
+      "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'NEWHOSTVSetup')]",
       "location": "[parameters('location')]",
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -423,9 +423,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[variables('HYPERVSetupScriptUri')]"
+            "[variables('NEWHOSTVSetupScriptUri')]"
           ],
-          "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File HYPERVSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -VirtualNetworkPrefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('virtualNetworkAddressPrefix'))]"
+          "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File NEWHOSTVSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
         }
       },
       "dependsOn": [
@@ -452,7 +452,7 @@
             "value": "[parameters('HostNetworkInterface1Name')]"
           },
           "subnetId": {
-            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('NATSubnetName'))]"
+            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name')), parameters('NATSubnetName'))]"
           },
           "pipId": {
             "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]"
@@ -539,7 +539,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name'))]"
       ]
     },
     {
@@ -562,7 +562,7 @@
             "value": true
           },
           "subnetId": {
-            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('hyperVSubnetName'))]"
+            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name')), parameters('NEWHOSTVSubnetName'))]"
           }
         },
         "template": {
@@ -645,7 +645,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name'))]"
       ]
     },
     {
@@ -671,7 +671,7 @@
             "value": "[parameters('HostNetworkInterface1Name')]"
           },
           "subnetId": {
-            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('NATSubnetName'))]"
+            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name')), parameters('NATSubnetName'))]"
           },
           "pipId": {
             "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]"
@@ -759,7 +759,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'createNic1')]",
         "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name'))]"
       ]
     },
     {
@@ -788,7 +788,7 @@
             "value": true
           },
           "subnetId": {
-            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName')), parameters('hyperVSubnetName'))]"
+            "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name')), parameters('NEWHOSTVSubnetName'))]"
           }
         },
         "template": {
@@ -872,7 +872,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'createNic2')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+        "[resourceId('Microsoft.Network/Vnet2s', parameters('Vnet2Name'))]"
       ]
     },
     {
