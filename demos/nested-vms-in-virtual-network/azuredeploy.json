@@ -176,6 +176,7 @@
       },
     "vmExtensionName": {
       "type": "string",
+"defaultValue": "IaaSAntimalware",
       "metadata": {
         "description": "Extension name"
       }
@@ -268,7 +269,7 @@
         "properties": {}
       },
       {
-        "type": "Microsoft.Network/Vnet2s",
+        "type": "Microsoft.Network/VirtualNetworks",
         "apiVersion": "2021-02-01",
         "name": "[parameters('Vnet2Name')]",
         "location": "[parameters('location')]",
