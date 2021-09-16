@@ -52,5 +52,3 @@ Copy-Item "C:\SCT\LGPO\LGPO_30\LGPO.exe" -Destination "C:\SCT\Baseline2019\Local
 Set-ExecutionPolicy RemoteSigned
 
 cd C:\SCT\Baseline2019\Local_Script\
-
-.\BaselineLocalInstall.ps1 -WS2019NonDomainJoined
