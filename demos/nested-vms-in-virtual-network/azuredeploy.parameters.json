@@ -13,6 +13,9 @@
       "metadata": {
         "description": "Admin User Password for the Host Virtual Machine"
       }
+   },
+   "vmExtensionName": {
+      "value": "malware"
     }
   }
 }
