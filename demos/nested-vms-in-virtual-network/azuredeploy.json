@@ -430,7 +430,7 @@
             "fileUris": [
               "[variables('hvhostScriptUri')]"
             ],
-            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhost.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
+            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhostsetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
           }
         },
         "dependsOn": [
