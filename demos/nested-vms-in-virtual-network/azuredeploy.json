@@ -32,7 +32,7 @@
     },
     "HostPublicIPAddressName": {
       "type": "string",
-      "defaultValue": "HVHOSTPIP",
+      "defaultValue": "HYPERVPIP",
       "metadata": {
         "description": "Resource Name for Public IP address attached to Hyper-V Host"
       }
@@ -109,21 +109,21 @@
     },
     "HostNetworkInterface1Name": {
       "type": "string",
-      "defaultValue": "HVHOSTNIC1",
+      "defaultValue": "HYPERVNIC1",
       "metadata": {
         "description": "Hyper-V Host Network Interface 1 Name, attached to NAT Subnet"
       }
     },
     "HostNetworkInterface2Name": {
       "type": "string",
-      "defaultValue": "HVHOSTNIC2",
+      "defaultValue": "HYPERVNIC2",
       "metadata": {
         "description": "Hyper-V Host Network Interface 2 Name, attached to Hyper-V LAN Subnet"
       }
     },
     "HostVirtualMachineName": {
       "type": "string",
-      "defaultValue": "HVHOST",
+      "defaultValue": "HYPERV",
       "maxLength": 15,
       "metadata": {
         "description": "Name of Hyper-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
@@ -183,7 +183,7 @@
     "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
     "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
     "DSCInstallWindowsFeaturesUri": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
-    "HVHostSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+    "HYPERVSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('HYPERVsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
   },
   "resources": [
     {
@@ -380,7 +380,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-03-01",
-      "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'HVHOSTSetup')]",
+      "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'HYPERVSetup')]",
       "location": "[parameters('location')]",
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -389,9 +389,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[variables('HVHostSetupScriptUri')]"
+            "[variables('HYPERVSetupScriptUri')]"
           ],
-          "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File HVHostSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -VirtualNetworkPrefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('virtualNetworkAddressPrefix'))]"
+          "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File HYPERVSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -VirtualNetworkPrefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('virtualNetworkAddressPrefix'))]"
         }
       },
       "dependsOn": [
