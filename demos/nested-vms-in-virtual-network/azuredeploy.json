@@ -176,7 +176,6 @@
       },
     "vmExtensionName": {
       "type": "string",
-"defaultValue": "IaaSAntimalware",
       "metadata": {
         "description": "Extension name"
       }
