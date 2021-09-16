@@ -176,9 +176,8 @@
       },
     "vmExtensionName": {
       "type": "string",
-"defaultValue": "IaaSAntimalware",
       "metadata": {
-        "description": "Extension name"
+      "description": "Extension name"
       }
     }
     },
@@ -190,7 +189,7 @@
       "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
       "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
       "DSCInstallWindowsFeaturesUri": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
-      "NEWHOSTVSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+      "hvhostScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
     },
     "resources": [
      
@@ -203,28 +202,29 @@
           "[concat('Microsoft.Compute/virtualMachines/', parameters('HostVirtualMachineName'))]"
         ],
   
-        "properties": {
-          "publisher": "Microsoft.Azure.Security",
-          "type": "IaaSAntimalware",
-          "typeHandlerVersion": "1.3",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "AntimalwareEnabled": "true"
-  
-            },
-  
-            "RealtimeProtectionEnabled": "true",
-            "ScheduledScanSettings": {
-              "isEnabled": "true",
-              "scanType": "Quick",
-              "day": "7",
-              "time": "120"
-            }
+      "properties": {
+        "publisher": "Microsoft.Azure.Security",
+        "type": "IaaSAntimalware",
+        "typeHandlerVersion": "1.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "AntimalwareEnabled": true,
+          "Exclusions": {
+            "Paths": "C:\\Users",
+            "Extensions": ".txt",
+            "Processes": "taskmgr.exe"
+          },
+          "RealtimeProtectionEnabled": "true",
+          "ScheduledScanSettings": {
+            "isEnabled": "true",
+            "scanType": "Quick",
+            "day": "7",
+            "time": "120"            }
           }
-        },
+        }
 
       
-      
+      },
       {
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "2021-02-01",
@@ -419,7 +419,7 @@
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
         "apiVersion": "2021-03-01",
-        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'NEWHOSTVSetup')]",
+        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'hvhost')]",
         "location": "[parameters('location')]",
         "properties": {
           "publisher": "Microsoft.Compute",
@@ -428,9 +428,9 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('NEWHOSTVSetupScriptUri')]"
+              "[variables('hvhostScriptUri')]"
             ],
-            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File NEWHOSTVSetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
+            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhost.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
           }
         },
         "dependsOn": [
@@ -564,7 +564,7 @@
               "value": "[parameters('HostNetworkInterface2Name')]"
             },
             "enableIPForwarding": {
-              "value": true
+              "value": false
             },
             "subnetId": {
               "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name')), parameters('NEWHOSTVSubnetName'))]"
