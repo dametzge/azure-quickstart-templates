@@ -49,6 +49,8 @@ Expand-Archive -Path C:\SCT\Baseline2019.zip -DestinationPath C:\SCT\Baseline201
 
 Copy-Item "C:\SCT\LGPO\LGPO_30\LGPO.exe" -Destination "C:\SCT\Baseline2019\Local_Script\Tools"
 
-Set-ExecutionPolicy RemoteSigned
+Set-ExecutionPolicy RemoteSigned -Force
 
 cd C:\SCT\Baseline2019\Local_Script\
+
+.\BaselineLocalInstall.ps1 -WS2019NonDomainJoined
