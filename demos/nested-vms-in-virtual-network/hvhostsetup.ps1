@@ -42,7 +42,7 @@ $url2 = "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7
 $url3 = "https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
 $output1 = "C:\SCT\LGPO.zip"
 $output2 = "C:\SCT\Baseline2019.zip"
-$output3 = "C:\ISO\WindowsSErver2019ENUS.iso"
+$output3 = "C:\ISO\WindowsServer2019ENUS.iso"
 
 Invoke-WebRequest -Uri $url1 -OutFile $output1
 Invoke-WebRequest -Uri $url2 -OutFile $output2
