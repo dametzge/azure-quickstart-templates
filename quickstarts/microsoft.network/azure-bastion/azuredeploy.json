@@ -11,7 +11,7 @@
   "parameters": {
     "vnetName": {
       "type": "string",
-      "defaultValue": "vnet01",
+      "defaultValue": "res-bastion-vnet",
       "metadata": {
         "description": "Name of new or existing vnet to which Azure Bastion should be deployed"
       }
