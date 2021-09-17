@@ -189,7 +189,7 @@
       "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
       "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
       "DSCInstallWindowsFeaturesUri": "[uri(parameters('_artifactsLocation'), format('dsc/dscinstallwindowsfeatures.zip{0}', parameters('_artifactsLocationSasToken')))]",
-      "hvhostScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
+      "hvhostSetupScriptUri": "[uri(parameters('_artifactsLocation'), format('hvhostsetup.ps1{0}', parameters('_artifactsLocationSasToken')))]"
     },
     "resources": [
      
@@ -419,7 +419,7 @@
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
         "apiVersion": "2021-03-01",
-        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'hvhost')]",
+        "name": "[format('{0}/{1}', parameters('HostVirtualMachineName'), 'hvhostsetup')]",
         "location": "[parameters('location')]",
         "properties": {
           "publisher": "Microsoft.Compute",
@@ -428,7 +428,7 @@
           "autoUpgradeMinorVersion": true,
           "settings": {
             "fileUris": [
-              "[variables('hvhostScriptUri')]"
+              "[variables('hvhostSetupScriptUri')]"
             ],
             "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhostsetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
           }
