@@ -35,22 +35,29 @@ cmd.exe /c "netsh routing ip add persistentroute dest=$($VirtualNetwork.NetworkA
 Get-Disk | Where-Object -Property PartitionStyle -EQ "RAW" | Initialize-Disk -PartitionStyle GPT -PassThru | New-Volume -FileSystem NTFS -AllocationUnitSize 65536 -DriveLetter F -FriendlyName "Hyper-V"
 
 New-Item -Path "C:\" -Name "SCT" -ItemType Directory
+New-Item -Path "C:\" -Name "ISO" -ItemType Directory
 
 $url1 = "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip"
 $url2 = "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2010%20Version%201809%20and%20Windows%20Server%202019%20Security%20Baseline.zip"
+$url3 = "https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso"
 $output1 = "C:\SCT\LGPO.zip"
 $output2 = "C:\SCT\Baseline2019.zip"
+$output3 = "C:\ISO\WindowsSErver2019ENUS.iso"
 
 Invoke-WebRequest -Uri $url1 -OutFile $output1
 Invoke-WebRequest -Uri $url2 -OutFile $output2
 
 Expand-Archive -Path C:\SCT\LGPO.zip -DestinationPath C:\SCT\LGPO -Verbose
+Remove-Item -Path C:\SCT\LGPO.zip -Force
 Expand-Archive -Path C:\SCT\Baseline2019.zip -DestinationPath C:\SCT\Baseline2019 -Verbose
+Remove-Item -Path C:\SCT\Baseline2019.zip -Force
 
 Copy-Item "C:\SCT\LGPO\LGPO_30\LGPO.exe" -Destination "C:\SCT\Baseline2019\Local_Script\Tools"
 
-Set-ExecutionPolicy RemoteSigned -Force
+Set-ExecutionPolicy RemoteSigned
 
 cd C:\SCT\Baseline2019\Local_Script\
 
 .\BaselineLocalInstall.ps1 -WS2019NonDomainJoined
+
+Invoke-WebRequest -Uri $url3 -OutFile $output3
