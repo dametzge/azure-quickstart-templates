@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "HostAdminUserName": {
-      "value": "DMadmin",
+      "value": "HOSTadmin",
       "metadata": {
         "description": "Admin Username for the Host Virtual Machine"
       }
     },
     "HostAdminPassword": {
-      "value": "?15%Von200!!",
+      "value": "NL!B2eK%m5h3XkEp",
       "metadata": {
         "description": "Admin User Password for the Host Virtual Machine"
       }
