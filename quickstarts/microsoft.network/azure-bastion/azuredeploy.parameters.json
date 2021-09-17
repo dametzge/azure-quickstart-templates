@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "bastionHostName": {
-      "value": "GEN-UNIQUE-8"
+      "value": "RES-Bastion"
     }
   }
 }
