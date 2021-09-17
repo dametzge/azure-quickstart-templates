@@ -32,19 +32,19 @@
       },
       "HostPublicIPAddressName": {
         "type": "string",
-        "defaultValue": "hvhostVPIP",
+        "defaultValue": "HVHOSTPIP",
         "metadata": {
-          "description": "Resource Name for Public IP address attached to hvhost-V Host"
+          "description": "Resource Name for Public IP address attached to Hyper-V Host"
         }
       },
-      "Vnet2Name": {
+      "VirtualNetworkName": {
         "type": "string",
-        "defaultValue": "Vnet2",
+        "defaultValue": "VirtualNetwork",
         "metadata": {
-          "description": "hvhost-V Host and Guest VMs Virtual Network"
+          "description": "Hyper-V Host and Guest VMs Virtual Network"
         }
       },
-      "Vnet2AddressPrefix": {
+      "VirtualNetworkAddressPrefix": {
         "type": "string",
         "defaultValue": "10.0.0.0/22",
         "metadata": {
@@ -65,18 +65,18 @@
           "description": "NAT Subnet Address Space"
         }
       },
-      "hvhostVSubnetName": {
+      "HVHOSTSubnetName": {
         "type": "string",
-        "defaultValue": "hvhost-V-LAN",
+        "defaultValue": "Hyper-V-LAN",
         "metadata": {
-          "description": "hvhost-V Host Subnet Name"
+          "description": "Hyper-V Host Subnet Name"
         }
       },
-      "hvhostVSubnetPrefix": {
+      "HVHOSTSubnetPrefix": {
         "type": "string",
         "defaultValue": "10.0.1.0/24",
         "metadata": {
-          "description": "hvhost-V Host Subnet Address Space"
+          "description": "Hyper-V Host Subnet Address Space"
         }
       },
       "ghostedSubnetName": {
@@ -109,24 +109,24 @@
       },
       "HostNetworkInterface1Name": {
         "type": "string",
-        "defaultValue": "hvhostVNIC1",
+        "defaultValue": "HVHOSTNIC1",
         "metadata": {
-          "description": "hvhost-V Host Network Interface 1 Name, attached to NAT Subnet"
+          "description": "Hyper-V Host Network Interface 1 Name, attached to NAT Subnet"
         }
       },
       "HostNetworkInterface2Name": {
         "type": "string",
-        "defaultValue": "hvhostVNIC2",
+        "defaultValue": "HVHOSTNIC2",
         "metadata": {
-          "description": "hvhost-V Host Network Interface 2 Name, attached to hvhost-V LAN Subnet"
+          "description": "Hyper-V Host Network Interface 2 Name, attached to Hyper-V LAN Subnet"
         }
       },
       "HostVirtualMachineName": {
         "type": "string",
-        "defaultValue": "hvhostV",
+        "defaultValue": "HVHOST",
         "maxLength": 15,
         "metadata": {
-          "description": "Name of hvhost-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
+          "description": "Name of Hyper-V Host Virtual Machine, Maximum of 15 characters, use letters and numbers only."
         }
       },
       "HostVirtualMachineSize": {
@@ -184,7 +184,7 @@
     "functions": [],
     "variables": {
       "NATSubnetNSGName": "[format('{0}NSG', parameters('NATSubnetName'))]",
-      "hvhostVSubnetNSGName": "[format('{0}NSG', parameters('hvhostVSubnetName'))]",
+      "HVHOSTSubnetNSGName": "[format('{0}NSG', parameters('HVHOSTSubnetName'))]",
       "ghostedSubnetNSGName": "[format('{0}NSG', parameters('ghostedSubnetName'))]",
       "azureVMsSubnetNSGName": "[format('{0}NSG', parameters('azureVMsSubnetName'))]",
       "azureVMsSubnetUDRName": "[format('{0}UDR', parameters('azureVMsSubnetName'))]",
@@ -221,9 +221,7 @@
             "day": "7",
             "time": "120"            }
           }
-        }
-
-      
+        }   
       },
       {
         "type": "Microsoft.Network/publicIPAddresses",
@@ -250,7 +248,7 @@
       {
         "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2021-02-01",
-        "name": "[variables('hvhostVSubnetNSGName')]",
+        "name": "[variables('HVHOSTSubnetNSGName')]",
         "location": "[parameters('location')]",
         "properties": {}
       },
@@ -271,12 +269,12 @@
       {
         "type": "Microsoft.Network/VirtualNetworks",
         "apiVersion": "2021-02-01",
-        "name": "[parameters('Vnet2Name')]",
+        "name": "[parameters('VirtualNetworkName')]",
         "location": "[parameters('location')]",
         "properties": {
           "addressSpace": {
             "addressPrefixes": [
-              "[parameters('Vnet2AddressPrefix')]"
+              "[parameters('VirtualNetworkAddressPrefix')]"
             ]
           },
           "subnets": [
@@ -290,11 +288,11 @@
               }
             },
             {
-              "name": "[parameters('hvhostVSubnetName')]",
+              "name": "[parameters('HVHOSTSubnetName')]",
               "properties": {
-                "addressPrefix": "[parameters('hvhostVSubnetPrefix')]",
+                "addressPrefix": "[parameters('HVHOSTSubnetPrefix')]",
                 "networkSecurityGroup": {
-                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('hvhostVSubnetNSGName'))]"
+                  "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('HVHOSTSubnetNSGName'))]"
                 }
               }
             },
@@ -325,7 +323,7 @@
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('azureVMsSubnetNSGName'))]",
           "[resourceId('Microsoft.Resources/deployments', 'udrDeploy')]",
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('ghostedSubnetNSGName'))]",
-          "[resourceId('Microsoft.Network/networkSecurityGroups', variables('hvhostVSubnetNSGName'))]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', variables('HVHOSTSubnetNSGName'))]",
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('NATSubnetNSGName'))]"
         ]
       },
@@ -430,7 +428,7 @@
             "fileUris": [
               "[variables('hvhostSetupScriptUri')]"
             ],
-            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhostsetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -Vnet2Prefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('Vnet2AddressPrefix'))]"
+            "commandToExecute": "[format('powershell -ExecutionPolicy Unrestricted -File hvhostsetup.ps1 -NIC1IPAddress {0} -NIC2IPAddress {1} -GhostedSubnetPrefix {2} -VirtualNetworkPrefix {3}', reference(resourceId('Microsoft.Resources/deployments', 'createNic1'), '2019-10-01').outputs.assignedIp.value, reference(resourceId('Microsoft.Resources/deployments', 'createNic2'), '2019-10-01').outputs.assignedIp.value, parameters('ghostedSubnetPrefix'), parameters('VirtualNetworkAddressPrefix'))]"
           }
         },
         "dependsOn": [
@@ -457,7 +455,7 @@
               "value": "[parameters('HostNetworkInterface1Name')]"
             },
             "subnetId": {
-              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name')), parameters('NATSubnetName'))]"
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName')), parameters('NATSubnetName'))]"
             },
             "pipId": {
               "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]"
@@ -544,7 +542,7 @@
         },
         "dependsOn": [
           "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]",
-          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name'))]"
+          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName'))]"
         ]
       },
       {
@@ -567,7 +565,7 @@
               "value": false
             },
             "subnetId": {
-              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name')), parameters('hvhostVSubnetName'))]"
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName')), parameters('HVHOSTSubnetName'))]"
             }
           },
           "template": {
@@ -650,7 +648,7 @@
           }
         },
         "dependsOn": [
-          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name'))]"
+          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName'))]"
         ]
       },
       {
@@ -676,7 +674,7 @@
               "value": "[parameters('HostNetworkInterface1Name')]"
             },
             "subnetId": {
-              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name')), parameters('NATSubnetName'))]"
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName')), parameters('NATSubnetName'))]"
             },
             "pipId": {
               "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]"
@@ -764,7 +762,7 @@
         "dependsOn": [
           "[resourceId('Microsoft.Resources/deployments', 'createNic1')]",
           "[resourceId('Microsoft.Network/publicIPAddresses', parameters('HostPublicIPAddressName'))]",
-          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name'))]"
+          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName'))]"
         ]
       },
       {
@@ -793,7 +791,7 @@
               "value": true
             },
             "subnetId": {
-              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name')), parameters('hvhostVSubnetName'))]"
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName')), parameters('HVHOSTSubnetName'))]"
             }
           },
           "template": {
@@ -877,7 +875,7 @@
         },
         "dependsOn": [
           "[resourceId('Microsoft.Resources/deployments', 'createNic2')]",
-          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('Vnet2Name'))]"
+          "[resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName'))]"
         ]
       },
       {
