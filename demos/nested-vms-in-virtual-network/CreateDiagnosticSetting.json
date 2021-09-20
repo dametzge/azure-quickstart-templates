@@ -6,9 +6,9 @@
         "type": "String",
         "defaultValue": "Send Activity log to workspace"
     },
-    "workspaceName": {
+    "workspaceID": {
         "type": "String",
-        "defaultValue": "res-hyperv-la"
+        "defaultValue": "e4accafb-bd63-4ca8-9964-ae6992f03afd"
     }
   },
   "resources": [
