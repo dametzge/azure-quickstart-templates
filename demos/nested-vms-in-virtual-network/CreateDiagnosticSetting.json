@@ -6,7 +6,7 @@
         "type": "String"
     },
     "workspaceName": {
-        "type": "String".
+        "type": "String",
         "defaultValue": "res-hyperv-la"
     }
   },
