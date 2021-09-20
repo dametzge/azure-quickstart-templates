@@ -11,7 +11,7 @@
   "parameters": {
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "resstoraccoiz",
+      "defaultValue": "[uniqueString(resourceGroup().id)]",
       "metadata": {
         "description": "Storage account name"
       }
