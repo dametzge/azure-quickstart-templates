@@ -43,7 +43,6 @@
       "type": "Microsoft.OperationalInsights/workspaces",
       "apiVersion": "2020-08-01",
       "name": "[parameters('workspaceName')]",
-      "location": "[parameters('location')]",
       "properties": {
         "sku": {
           "name": "[parameters('sku')]"
