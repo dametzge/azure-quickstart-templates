@@ -56,7 +56,7 @@
     },
     "storageTier": {
       "type": "string",
-      "defaultValue": "Hot",
+      "defaultValue": "Cold",
       "allowedValues": [
         "Hot",
         "Cool"
@@ -67,7 +67,7 @@
     },
     "deleteRetentionPolicy": {
       "type": "int",
-      "defaultValue": 7,
+      "defaultValue": 1,
       "maxValue": 365,
       "minValue": 1,
       "metadata": {
