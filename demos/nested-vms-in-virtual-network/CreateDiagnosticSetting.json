@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "settingName": {
+        "type": "String"
+    },
+    "workspaceId": {
+        "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/diagnosticSettings",
+      "apiVersion": "2017-05-01-preview",
+      "name": "[parameters('settingName')]",
+      "dependsOn": [],
+      "properties": {
+        "workspaceId": "[parameters('workspaceId')]",
+        "logs": [
+          {
+          "category": "Administrative",
+          "enabled": true
+          },
+          {
+          "category": "Alert",
+          "enabled": true
+          },
+          {
+          "category": "Autoscale",
+          "enabled": true
+          },
+          {
+          "category": "Policy",
+          "enabled": true
+          },
+          {
+          "category": "Recommendation",
+          "enabled": true
+          },
+          {
+          "category": "ResourceHealth",
+          "enabled": true
+          },
+          {
+          "category": "Security",
+          "enabled": true
+          },
+          {
+          "category": "ServiceHealth",
+          "enabled": true
+          }
+        ]
+      }
+    }
+  ]
+}
