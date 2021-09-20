@@ -3,7 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "settingName": {
-        "type": "String"
+        "type": "String",
+        "defaultValue": "Send Activity log to workspace"
     },
     "workspaceName": {
         "type": "String",
