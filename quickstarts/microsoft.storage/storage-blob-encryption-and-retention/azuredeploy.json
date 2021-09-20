@@ -56,7 +56,7 @@
     },
     "storageTier": {
       "type": "string",
-      "defaultValue": "Hot",
+      "defaultValue": "Cool",
       "allowedValues": [
         "Hot",
         "Cool"
