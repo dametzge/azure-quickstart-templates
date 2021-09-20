@@ -6,9 +6,9 @@
         "type": "String",
         "defaultValue": "Send Activity log to workspace"
     },
-    "workspaceID": {
+    "workspaceName": {
         "type": "String",
-        "defaultValue": "e4accafb-bd63-4ca8-9964-ae6992f03afd"
+        "defaultValue": "res-hyperv-la"
     }
   },
   "resources": [
@@ -18,7 +18,7 @@
       "name": "[parameters('settingName')]",
       "dependsOn": [],
       "properties": {
-        "workspaceId": "[parameters('workspaceId')]",
+        "workspaceName": "[parameters('workspaceName')]",
         "logs": [
           {
           "category": "Administrative",
