@@ -5,8 +5,9 @@
     "settingName": {
         "type": "String"
     },
-    "workspaceId": {
-        "type": "String"
+    "workspaceName": {
+        "type": "String".
+        "defaultValue": "res-hyperv-la"
     }
   },
   "resources": [
