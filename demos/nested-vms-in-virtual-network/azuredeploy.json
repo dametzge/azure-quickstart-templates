@@ -788,7 +788,7 @@
               "value": "[parameters('HostNetworkInterface2Name')]"
             },
             "enableIPForwarding": {
-              "value": true
+              "value": false
             },
             "subnetId": {
               "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/VirtualNetworks', parameters('VirtualNetworkName')), parameters('HVHOSTSubnetName'))]"
