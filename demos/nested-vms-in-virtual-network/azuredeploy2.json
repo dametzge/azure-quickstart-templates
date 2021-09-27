@@ -332,13 +332,13 @@
         "apiVersion": "2021-03-01",
         "name": "[parameters('HostVirtualMachineName')]",
         "location": "[parameters('location')]",
+        "identity": {
+            "type": "SystemAssigned"
+        },
         "properties": {
           "hardwareProfile": {
             "vmSize": "[parameters('HostVirtualMachineSize')]"
           },
-          "identity": {
-            "type": "SystemAssigned"
-          }, 
           "storageProfile": {
             "imageReference": {
               "publisher": "MicrosoftWindowsServer",
