@@ -407,7 +407,7 @@
         "type": "ConfigurationforWindows",
         "typeHandlerVersion": "1.2",
         "autoUpgradeMinorVersion": true,
-        "enableAutomaticUpgrade": true, 
+        "enableAutomaticUpgrade": true,
         "settings": {},
         "protectedSettings": {}
         }
