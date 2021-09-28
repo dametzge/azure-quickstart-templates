@@ -7,6 +7,12 @@
       "metadata": {
         "description": "Name of the workspace."
       }
+    },
+    "automationAccountName": {
+      "value": "reshypervlaacc",
+      "metadata": {
+        "description": "Automation account name"
+      }
     }
   }
 }
