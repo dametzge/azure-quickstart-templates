@@ -61,3 +61,17 @@ cd C:\SCT\Baseline2019\Local_Script\
 .\BaselineLocalInstall.ps1 -WS2019NonDomainJoined
 
 # Invoke-WebRequest -Uri $url3 -OutFile $output3
+
+$Switch = "ADRes"
+$RootVM1 = "ROOTDC01"
+$RootVM2 = "ROOTDC02"
+$ChildVM1 = "CHILDDC01"
+$ChildVM2 = "CHILDDC02"
+$VMPath = "F:\Hyper-V\"
+
+New-VMSwitch -Name $Switch -SwitchType Internal
+New-VM -Name $RootVM1 -MemoryStartupBytes 6GB -NewVHDPath $VMPath\$RootVM1\$RootVM1.vhdx -NewVHDSizeBytes 100GB -Generation 1 -BootDevice CD -SwitchName $Switch
+New-VM -Name $RootVM2 -MemoryStartupBytes 6GB -NewVHDPath $VMPath\$RootVM2\$RootVM2.vhdx -NewVHDSizeBytes 100GB -Generation 1 -BootDevice CD -SwitchName $Switch
+New-VM -Name $ChildVM1 -MemoryStartupBytes 6GB -NewVHDPath $VMPath\$ChildVM1\$ChildVM1.vhdx -NewVHDSizeBytes 100GB -Generation 1 -BootDevice CD -SwitchName $Switch
+New-VM -Name $ChildVM2 -MemoryStartupBytes 6GB -NewVHDPath $VMPath\$ChildVM2\$ChildVM2.vhdx -NewVHDSizeBytes 100GB -Generation 1 -BootDevice CD -SwitchName $Switch
+
